@@ -6,7 +6,7 @@ class Flat(models.Model):
     owner = models.CharField('ФИО владельца', max_length=200)
     owners_phonenumber = models.CharField('Номер владельца', max_length=20)
     new_building = models.BooleanField(blank=True, null=True)
-    
+
     created_at = models.DateTimeField(
         'Когда создано объявление',
         default=timezone.now,
