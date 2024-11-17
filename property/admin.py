@@ -12,6 +12,8 @@ class FlatAdmin(admin.ModelAdmin):
 
     list_filter = ['active', 'new_building', 'rooms_number', 'has_balcony']
 
+    raw_id_fields = ['liked_by']
+
 
 class ComplaintForm(admin.ModelAdmin):
     raw_id_fields = ['flat']
