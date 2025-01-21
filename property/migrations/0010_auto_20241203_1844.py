@@ -6,16 +6,20 @@ from django.db import migrations
 def get_owners(apps, schemaeditor):
     Owner = apps.get_model('property', 'Owner')
     Flat = apps.get_model('property', 'Flat')
-    for owner in Flat.objects.all():
+    for flat in Flat.objects.all():
         Owner.objects.get_or_create(
-            owner=owner
+            name=flat.owner,
+            defaults={
+                'owner_pure_phone': flat.owner_pure_phone,
+                'owner_phonenumber': flat.owner_phonenumber
+            }
         )
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('property', '0009_owner'),
+        ('property', '0009_auto_20241203_1844'),
     ]
 
     operations = [

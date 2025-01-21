@@ -9,7 +9,7 @@ class Flat(models.Model):
     owner = models.CharField('ФИО владельца', max_length=200)
     owner_pure_phone = PhoneNumberField(null=True, blank=True)
 
-    owners_phonenumber = models.CharField('Номер владельца', max_length=20)
+    owner_phonenumber = models.CharField('Номер владельца', max_length=20)
     new_building = models.BooleanField(blank=True, null=True)
 
     created_at = models.DateTimeField(
@@ -81,12 +81,13 @@ class Complaint(models.Model):
 
 
 class Owner(models.Model):
-    owner = models.CharField('ФИО владельца', max_length=200)
-    owners_phonenumber = models.CharField('Номер владельца', max_length=20)
-    owner_pure_phone = PhoneNumberField(null=True, blank=True, verbose_name='Нормализированный номер владельца')
+    name = models.CharField('ФИО владельца', max_length=200)
+    owner_phonenumber = models.CharField('Номер владельца', max_length=20)
+    owner_pure_phone = PhoneNumberField(null=True, blank=True, verbose_name='Нормализированный номер владельца', db_index=True)
 
     flats = models.ManyToManyField(
         Flat,
         related_name="owner_apartments",
-        verbose_name='Квартиры в собственности'
+        verbose_name='Квартиры в собственности',
+        db_index=True
     )
