@@ -4,20 +4,22 @@ from django.db import migrations
 from phonenumbers import is_valid_number, parse
 
 
-def get_owner_pure_phone(apps, schema_editor):
+def get_pure_phone(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
+    flats = Flat.objects.all()
 
-    for flat in Flat.objects.all():
-        owner_pure_phone = parse(flat.owners_phonenumber, 'RU')
-        if is_valid_number(owner_pure_phone):
-            flat.owner_pure_phone = owner_pure_phone
+    for flat in flats.iterator():
+        pure_phone = parse(flat.owners_phonenumber, 'RU')
+        if is_valid_number(pure_phone):
+            flat.pure_phone = pure_phone
             flat.save()
 
 
 def move_backward(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
-    for flat in Flat.objects.all():
-        flat.owner_pure_phone = None
+    flats = Flat.objects.all()
+    for flat in flats.iterator():
+        flat.pure_phone = None
         flat.save()
 
 
@@ -28,5 +30,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(get_owner_pure_phone, move_backward)
+        migrations.RunPython(get_pure_phone, move_backward)
     ]

@@ -6,10 +6,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Flat(models.Model):
-    owner = models.CharField('ФИО владельца', max_length=200)
-    owner_pure_phone = PhoneNumberField(null=True, blank=True)
-
-    owner_phonenumber = models.CharField('Номер владельца', max_length=20)
     new_building = models.BooleanField(blank=True, null=True)
 
     created_at = models.DateTimeField(
@@ -54,7 +50,7 @@ class Flat(models.Model):
         blank=True,
         db_index=True)
 
-    liked_by = models.ManyToManyField(User, related_name="liked_posts")
+    liked_by = models.ManyToManyField(User, related_name="liked")
 
     def __str__(self):
         return f'{self.town}, {self.address} ({self.price}р.)'
@@ -65,13 +61,15 @@ class Complaint(models.Model):
         User,
         on_delete=models.SET_NULL,
         verbose_name='Кто жаловался',
-        null=True
+        null=True,
+        related_name="complaints"
     )
 
     flat = models.ForeignKey(
         Flat,
         on_delete=models.CASCADE,
-        verbose_name='Квартира, на которую пожаловались'
+        verbose_name='Квартира, на которую пожаловались',
+        related_name="complaints"
     )
 
     text = models.TextField('Жалоба')
@@ -82,12 +80,15 @@ class Complaint(models.Model):
 
 class Owner(models.Model):
     name = models.CharField('ФИО владельца', max_length=200)
-    owner_phonenumber = models.CharField('Номер владельца', max_length=20)
-    owner_pure_phone = PhoneNumberField(null=True, blank=True, verbose_name='Нормализированный номер владельца', db_index=True)
+    phonenumber = models.CharField('Номер владельца', max_length=20)
+    pure_phone = PhoneNumberField(null=True, blank=True, verbose_name='Нормализированный номер владельца', db_index=True)
 
     flats = models.ManyToManyField(
         Flat,
-        related_name="owner_apartments",
+        related_name="owners",
         verbose_name='Квартиры в собственности',
         db_index=True
     )
+
+    def __str__(self):
+        return f'{self.name}'

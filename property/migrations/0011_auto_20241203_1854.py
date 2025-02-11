@@ -6,8 +6,9 @@ from django.db import migrations
 def move_owners_apartments(apps, schea_editor):  # переназвать функцию
     Owner = apps.get_model('property', 'Owner')
     Flat = apps.get_model('property', 'Flat')
-    for owner in Owner.objects.all():
-        owner.flats.set(Flat.objects.filter(owner=owner.name, owner_pure_phone=owner.owner_pure_phone))
+    owners = Owner.objects.all()
+    for owner in owners.iterator():
+        owner.flats.set(Flat.objects.filter(owner=owner.name, pure_phone=owner.pure_phone))
 
 
 class Migration(migrations.Migration):
